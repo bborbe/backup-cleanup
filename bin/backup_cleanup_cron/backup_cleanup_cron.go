@@ -20,7 +20,7 @@ const (
 	PARAMETER_LOGLEVEL    = "loglevel"
 	PARAMETER_KEEP_AMOUNT = "keep"
 	PARAMETER_DIRECTORY   = "dir"
-	PARAMETER_PREFIX      = "match"
+	PARAMETER_MATCH       = "match"
 	PARAMETER_WAIT        = "wait"
 	PARAMETER_ONE_TIME    = "one-time"
 	PARAMETER_LOCK        = "lock"
@@ -32,7 +32,7 @@ func main() {
 	defer logger.Close()
 	logLevelPtr := flag.String(PARAMETER_LOGLEVEL, log.INFO_STRING, "one of OFF,TRACE,DEBUG,INFO,WARN,ERROR")
 	targetDirPtr := flag.String(PARAMETER_DIRECTORY, "", "target directory")
-	matchPtr := flag.String(PARAMETER_PREFIX, "", "match")
+	matchPtr := flag.String(PARAMETER_MATCH, "", "match")
 	keepAmountPtr := flag.Int(PARAMETER_KEEP_AMOUNT, DEFAULT_KEEP_AMOUNT, "keep amount")
 	waitPtr := flag.Duration(PARAMETER_WAIT, time.Minute*60, "wait")
 	oneTimePtr := flag.Bool(PARAMETER_ONE_TIME, false, "exit after first backup")
@@ -66,13 +66,13 @@ func do(writer io.Writer, cleanupBackup CleanupBackup, dir string, match string,
 		return fmt.Errorf("parameter %s missing", PARAMETER_DIRECTORY)
 	}
 	if len(match) == 0 {
-		return fmt.Errorf("parameter %s missing", PARAMETER_PREFIX)
+		return fmt.Errorf("parameter %s missing", PARAMETER_MATCH)
 	}
 	if keepAmount <= 0 {
 		return fmt.Errorf("parameter %s missing", PARAMETER_KEEP_AMOUNT)
 	}
 
-	logger.Debugf("dir: %s, keepAmount %d, wait: %v, oneTime: %v, lockName: %s", dir, keepAmount, wait, oneTime, lockName)
+	logger.Debugf("dir: %s, match: %s, keepAmount %d, wait: %v, oneTime: %v, lockName: %s", dir, keepAmount, wait, oneTime, lockName)
 
 	for {
 		logger.Debugf("backup started")

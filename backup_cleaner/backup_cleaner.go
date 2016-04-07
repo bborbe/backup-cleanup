@@ -76,12 +76,17 @@ func listBackups(directory string, match string) ([]os.FileInfo, error) {
 	}
 	list := make([]os.FileInfo, 0)
 	for _, f := range files {
+		logger.Tracef("found %s", f.Name())
 		if f.IsDir() {
+			logger.Tracef("skip directory %s", f.Name())
 			continue
 		}
 		if re.MatchString(f.Name()) {
+			logger.Tracef("%s matches %s", f.Name(), match)
 			logger.Debugf("add backup %s", f.Name())
 			list = append(list, f)
+		} else {
+			logger.Tracef("%s mismatches %s", f.Name(), match)
 		}
 	}
 	return list, nil
