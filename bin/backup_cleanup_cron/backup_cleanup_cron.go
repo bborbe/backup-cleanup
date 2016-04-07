@@ -6,24 +6,24 @@ import (
 	"os"
 	"time"
 
+	"github.com/bborbe/backup_cleanup_cron/backup_cleaner"
 	flag "github.com/bborbe/flagenv"
 	"github.com/bborbe/lock"
 	"github.com/bborbe/log"
-	"github.com/bborbe/backup_cleanup_cron/backup_cleaner"
 )
 
 var logger = log.DefaultLogger
 
 const (
-	DEFAULT_KEEP_AMOUNT = 5
-	LOCK_NAME = "/var/run/backup_cleanup_cron.lock"
-	PARAMETER_LOGLEVEL = "loglevel"
+	DEFAULT_KEEP_AMOUNT   = 5
+	LOCK_NAME             = "/var/run/backup_cleanup_cron.lock"
+	PARAMETER_LOGLEVEL    = "loglevel"
 	PARAMETER_KEEP_AMOUNT = "keep"
-	PARAMETER_DIRECTORY = "dir"
-	PARAMETER_PREFIX = "prefix"
-	PARAMETER_WAIT = "wait"
-	PARAMETER_ONE_TIME = "one-time"
-	PARAMETER_LOCK = "lock"
+	PARAMETER_DIRECTORY   = "dir"
+	PARAMETER_PREFIX      = "prefix"
+	PARAMETER_WAIT        = "wait"
+	PARAMETER_ONE_TIME    = "one-time"
+	PARAMETER_LOCK        = "lock"
 )
 
 type CleanupBackup func(directory string, prefix string, keepAmount int) error
@@ -34,7 +34,7 @@ func main() {
 	targetDirPtr := flag.String(PARAMETER_DIRECTORY, "", "target directory")
 	prefixPtr := flag.String(PARAMETER_PREFIX, "", "prefix")
 	keepAmountPtr := flag.Int(PARAMETER_KEEP_AMOUNT, DEFAULT_KEEP_AMOUNT, "keep amount")
-	waitPtr := flag.Duration(PARAMETER_WAIT, time.Minute * 60, "wait")
+	waitPtr := flag.Duration(PARAMETER_WAIT, time.Minute*60, "wait")
 	oneTimePtr := flag.Bool(PARAMETER_ONE_TIME, false, "exit after first backup")
 	lockPtr := flag.String(PARAMETER_LOCK, LOCK_NAME, "lock")
 
