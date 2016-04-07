@@ -20,19 +20,19 @@ const (
 	PARAMETER_LOGLEVEL    = "loglevel"
 	PARAMETER_KEEP_AMOUNT = "keep"
 	PARAMETER_DIRECTORY   = "dir"
-	PARAMETER_PREFIX      = "prefix"
+	PARAMETER_PREFIX      = "match"
 	PARAMETER_WAIT        = "wait"
 	PARAMETER_ONE_TIME    = "one-time"
 	PARAMETER_LOCK        = "lock"
 )
 
-type CleanupBackup func(directory string, prefix string, keepAmount int) error
+type CleanupBackup func(directory string, match string, keepAmount int) error
 
 func main() {
 	defer logger.Close()
 	logLevelPtr := flag.String(PARAMETER_LOGLEVEL, log.INFO_STRING, "one of OFF,TRACE,DEBUG,INFO,WARN,ERROR")
 	targetDirPtr := flag.String(PARAMETER_DIRECTORY, "", "target directory")
-	prefixPtr := flag.String(PARAMETER_PREFIX, "", "prefix")
+	matchPtr := flag.String(PARAMETER_PREFIX, "", "match")
 	keepAmountPtr := flag.Int(PARAMETER_KEEP_AMOUNT, DEFAULT_KEEP_AMOUNT, "keep amount")
 	waitPtr := flag.Duration(PARAMETER_WAIT, time.Minute*60, "wait")
 	oneTimePtr := flag.Bool(PARAMETER_ONE_TIME, false, "exit after first backup")
@@ -45,7 +45,7 @@ func main() {
 	backupCleaner := backup_cleaner.New()
 
 	writer := os.Stdout
-	err := do(writer, backupCleaner.CleanupBackup, *targetDirPtr, *prefixPtr, *keepAmountPtr, *waitPtr, *oneTimePtr, *lockPtr)
+	err := do(writer, backupCleaner.CleanupBackup, *targetDirPtr, *matchPtr, *keepAmountPtr, *waitPtr, *oneTimePtr, *lockPtr)
 	if err != nil {
 		logger.Fatal(err)
 		logger.Close()
@@ -53,7 +53,7 @@ func main() {
 	}
 }
 
-func do(writer io.Writer, cleanupBackup CleanupBackup, dir string, prefix string, keepAmount int, wait time.Duration, oneTime bool, lockName string) error {
+func do(writer io.Writer, cleanupBackup CleanupBackup, dir string, match string, keepAmount int, wait time.Duration, oneTime bool, lockName string) error {
 	l := lock.NewLock(lockName)
 	if err := l.Lock(); err != nil {
 		return err
@@ -65,7 +65,7 @@ func do(writer io.Writer, cleanupBackup CleanupBackup, dir string, prefix string
 	if len(dir) == 0 {
 		return fmt.Errorf("parameter %s missing", PARAMETER_DIRECTORY)
 	}
-	if len(prefix) == 0 {
+	if len(match) == 0 {
 		return fmt.Errorf("parameter %s missing", PARAMETER_PREFIX)
 	}
 	if keepAmount <= 0 {
@@ -76,7 +76,7 @@ func do(writer io.Writer, cleanupBackup CleanupBackup, dir string, prefix string
 
 	for {
 		logger.Debugf("backup started")
-		if err := cleanupBackup(dir, prefix, keepAmount); err != nil {
+		if err := cleanupBackup(dir, match, keepAmount); err != nil {
 			return err
 		}
 		logger.Debugf("backup completed")

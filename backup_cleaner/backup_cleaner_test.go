@@ -17,7 +17,7 @@ func TestImplementsBackupCleaner(t *testing.T) {
 }
 
 func TestListBackups(t *testing.T) {
-	list, err := listBackups("/tmp", "notexistingbackupprefix")
+	list, err := listBackups("/tmp", "notexistingbackupmatch")
 	if err := AssertThat(err, NilValue()); err != nil {
 		t.Fatal(err)
 	}

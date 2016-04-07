@@ -13,7 +13,7 @@ backup_cleanup_cron \
 -loglevel=debug \
 -lock=/backup/backup_cleanup_cron.lock \
 -dir=/backup \
--prefix=database_backup \
+-match='backup_.*tar.gz' \
 -keep=5 \
 -one-time
 ```
@@ -25,7 +25,7 @@ backup_cleanup_cron \
 -loglevel=debug \
 -lock=/backup/backup_cleanup_cron.lock \
 -dir=/backup \
--prefix=database_backup \
+-match='backup_.*tar.gz' \
 -keep=5 \
 -wait=1h
 ```

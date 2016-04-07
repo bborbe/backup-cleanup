@@ -3,9 +3,10 @@ package backup_cleaner
 import (
 	"io/ioutil"
 
+	"fmt"
 	"os"
+	"regexp"
 	"sort"
-	"strings"
 
 	"github.com/bborbe/log"
 )
@@ -16,17 +17,17 @@ type backupCleaner struct {
 }
 
 type BackupCleaner interface {
-	CleanupBackup(directory string, prefix string, keepAmount int) error
+	CleanupBackup(directory string, match string, keepAmount int) error
 }
 
 func New() *backupCleaner {
 	return new(backupCleaner)
 }
 
-func (b *backupCleaner) CleanupBackup(directory string, prefix string, keepAmount int) error {
+func (b *backupCleaner) CleanupBackup(directory string, match string, keepAmount int) error {
 	logger.Debugf("backup cleanup started")
 
-	allBackups, err := listBackups(directory, prefix)
+	allBackups, err := listBackups(directory, match)
 	if err != nil {
 		return err
 	}
@@ -37,7 +38,7 @@ func (b *backupCleaner) CleanupBackup(directory string, prefix string, keepAmoun
 	toDeleteBackups := getBackupsToDelete(allBackups, keepAmount)
 	logger.Debugf("found %d backups to delete", toDeleteBackups)
 
-	if err = deleteBackups(toDeleteBackups); err != nil {
+	if err = deleteBackups(directory, toDeleteBackups); err != nil {
 		return err
 	}
 
@@ -54,14 +55,21 @@ func getBackupsToDelete(allBackups []os.FileInfo, keepAmount int) []os.FileInfo 
 	return allBackups[0:pos]
 }
 
-func deleteBackups(files []os.FileInfo) error {
+func deleteBackups(directory string, files []os.FileInfo) error {
 	for _, file := range files {
 		logger.Debugf("delete backup %s", file.Name())
+		if err := os.Remove(fmt.Sprintf("%s/%s", directory, file.Name())); err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
-func listBackups(directory string, prefix string) ([]os.FileInfo, error) {
+func listBackups(directory string, match string) ([]os.FileInfo, error) {
+	re, err := regexp.Compile(match)
+	if err != nil {
+		return nil, err
+	}
 	files, err := ioutil.ReadDir(directory)
 	if err != nil {
 		return nil, err
@@ -71,7 +79,7 @@ func listBackups(directory string, prefix string) ([]os.FileInfo, error) {
 		if f.IsDir() {
 			continue
 		}
-		if strings.Index(f.Name(), prefix) != -1 {
+		if re.MatchString(f.Name()) {
 			logger.Debugf("add backup %s", f.Name())
 			list = append(list, f)
 		}
