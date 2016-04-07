@@ -72,7 +72,7 @@ func do(writer io.Writer, cleanupBackup CleanupBackup, dir string, match string,
 		return fmt.Errorf("parameter %s missing", PARAMETER_KEEP_AMOUNT)
 	}
 
-	logger.Debugf("dir: %s, match: %s, keepAmount %d, wait: %v, oneTime: %v, lockName: %s", dir, keepAmount, wait, oneTime, lockName)
+	logger.Debugf("dir: %s, match: %s, keepAmount %d, wait: %v, oneTime: %v, lockName: %s", dir, match, keepAmount, wait, oneTime, lockName)
 
 	for {
 		logger.Debugf("backup started")
