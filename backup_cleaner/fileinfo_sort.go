@@ -1,8 +1,9 @@
 package backup_cleaner
 
 import (
-	"github.com/bborbe/stringutil"
 	"os"
+
+	"github.com/bborbe/stringutil"
 )
 
 type FileInfoByName []os.FileInfo
