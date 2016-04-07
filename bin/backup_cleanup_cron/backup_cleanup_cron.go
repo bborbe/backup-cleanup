@@ -59,8 +59,8 @@ func do(writer io.Writer, cleanupBackup CleanupBackup, dir string, prefix string
 		return err
 	}
 	defer l.Unlock()
-	logger.Debug("start")
-	defer logger.Debug("done")
+	logger.Debug("backup cleanup cron started")
+	defer logger.Debug("backup cleanup cron finished")
 
 	if len(dir) == 0 {
 		return fmt.Errorf("parameter %s missing", PARAMETER_DIRECTORY)
@@ -72,7 +72,7 @@ func do(writer io.Writer, cleanupBackup CleanupBackup, dir string, prefix string
 		return fmt.Errorf("parameter %s missing", PARAMETER_KEEP_AMOUNT)
 	}
 
-	logger.Debugf("dir: %s, keepAmount %s, wait: %v, oneTime: %v, lockName: %s", dir, keepAmount, wait, oneTime, lockName)
+	logger.Debugf("dir: %s, keepAmount %d, wait: %v, oneTime: %v, lockName: %s", dir, keepAmount, wait, oneTime, lockName)
 
 	for {
 		logger.Debugf("backup started")
@@ -87,6 +87,6 @@ func do(writer io.Writer, cleanupBackup CleanupBackup, dir string, prefix string
 
 		logger.Debugf("wait %v", wait)
 		time.Sleep(wait)
-		logger.Debugf("done")
+		logger.Debugf("sleep done")
 	}
 }
