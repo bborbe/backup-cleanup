@@ -10,14 +10,11 @@ One time
 
 ```
 backup_cleanup_cron \
--loglevel=debug \ 
--host=localhost \
--port=5432 \
--lock=/tmp/lock \ 
--username=postgres \
--password=S3CR3T \
--database=db \
--targetdir=/backup \
+-loglevel=debug \
+-lock=/backup/backup_cleanup_cron.lock \
+-dir=/backup \
+-prefix=database_backup \
+-keep=5 \
 -one-time
 ```
 
@@ -25,14 +22,11 @@ Cron
 
 ```
 backup_cleanup_cron \
--loglevel=debug \ 
--host=localhost \
--port=5432 \
--lock=/tmp/lock \ 
--username=postgres \
--password=S3CR3T \
--database=db \
--targetdir=/backup \
+-loglevel=debug \
+-lock=/backup/backup_cleanup_cron.lock \
+-dir=/backup \
+-prefix=database_backup \
+-keep=5 \
 -wait=1h
 ```
 
