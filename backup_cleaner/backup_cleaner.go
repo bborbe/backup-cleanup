@@ -48,12 +48,12 @@ func (b *backupCleaner) CleanupBackup(directory string, match string, keepAmount
 
 func getBackupsToDelete(allBackups []os.FileInfo, keepAmount int) []os.FileInfo {
 	emptyBackups := emptyFiles(allBackups)
-	logger.Debugf("found %d empty backups to delete")
+	logger.Debugf("found %d empty backups to delete", len(emptyBackups))
 	notEmptyBackups := notEmptyFiles(allBackups)
-	logger.Debugf("found %d not empty backups")
+	logger.Debugf("found %d not empty backups", len(notEmptyBackups))
 	pos := len(notEmptyBackups) - keepAmount
 	if pos < 0 {
-		logger.Debugf("nothing to delete")
+		logger.Debugf("nothing to delete => return only empty backups")
 		return emptyBackups
 	}
 	return append(notEmptyBackups[0:pos], emptyBackups...)
