@@ -10,9 +10,8 @@ import (
 	flag "github.com/bborbe/flagenv"
 	"github.com/bborbe/lock"
 	"github.com/bborbe/log"
+	"runtime"
 )
-
-var logger = log.DefaultLogger
 
 const (
 	DEFAULT_KEEP_AMOUNT   = 5
@@ -26,24 +25,29 @@ const (
 	PARAMETER_LOCK        = "lock"
 )
 
+var (
+	logger        = log.DefaultLogger
+	logLevelPtr   = flag.String(PARAMETER_LOGLEVEL, log.INFO_STRING, "one of OFF,TRACE,DEBUG,INFO,WARN,ERROR")
+	targetDirPtr  = flag.String(PARAMETER_DIRECTORY, "", "target directory")
+	matchPtr      = flag.String(PARAMETER_MATCH, "", "match")
+	keepAmountPtr = flag.Int(PARAMETER_KEEP_AMOUNT, DEFAULT_KEEP_AMOUNT, "keep amount")
+	waitPtr       = flag.Duration(PARAMETER_WAIT, time.Minute*60, "wait")
+	oneTimePtr    = flag.Bool(PARAMETER_ONE_TIME, false, "exit after first backup")
+	lockPtr       = flag.String(PARAMETER_LOCK, LOCK_NAME, "lock")
+)
+
 type CleanupBackup func(directory string, match string, keepAmount int) error
 
 func main() {
 	defer logger.Close()
-	logLevelPtr := flag.String(PARAMETER_LOGLEVEL, log.INFO_STRING, "one of OFF,TRACE,DEBUG,INFO,WARN,ERROR")
-	targetDirPtr := flag.String(PARAMETER_DIRECTORY, "", "target directory")
-	matchPtr := flag.String(PARAMETER_MATCH, "", "match")
-	keepAmountPtr := flag.Int(PARAMETER_KEEP_AMOUNT, DEFAULT_KEEP_AMOUNT, "keep amount")
-	waitPtr := flag.Duration(PARAMETER_WAIT, time.Minute*60, "wait")
-	oneTimePtr := flag.Bool(PARAMETER_ONE_TIME, false, "exit after first backup")
-	lockPtr := flag.String(PARAMETER_LOCK, LOCK_NAME, "lock")
-
 	flag.Parse()
+
 	logger.SetLevelThreshold(log.LogStringToLevel(*logLevelPtr))
 	logger.Debugf("set log level to %s", *logLevelPtr)
 
-	backupCleaner := backup_cleaner.New()
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
+	backupCleaner := backup_cleaner.New()
 	writer := os.Stdout
 	err := do(writer, backupCleaner.CleanupBackup, *targetDirPtr, *matchPtr, *keepAmountPtr, *waitPtr, *oneTimePtr, *lockPtr)
 	if err != nil {
