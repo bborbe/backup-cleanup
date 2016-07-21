@@ -6,11 +6,12 @@ import (
 	"os"
 	"time"
 
+	"runtime"
+
 	"github.com/bborbe/backup_cleanup_cron/backup_cleaner"
 	flag "github.com/bborbe/flagenv"
 	"github.com/bborbe/lock"
 	"github.com/bborbe/log"
-	"runtime"
 )
 
 const (
