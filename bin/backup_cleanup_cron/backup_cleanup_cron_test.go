@@ -15,7 +15,7 @@ func TestDoFail(t *testing.T) {
 	err := do(writer, func(directory string, match string, keepAmount int) error {
 		return nil
 	}, "", "", -1, time.Minute, false, "/tmp/lock")
-	if err = AssertThat(err, NotNilValue()); err != nil {
+	if err := AssertThat(err, NotNilValue()); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -25,7 +25,7 @@ func TestDoSuccess(t *testing.T) {
 	err := do(writer, func(directory string, match string, keepAmount int) error {
 		return nil
 	}, "/tmp", "backup", 5, time.Minute, true, "/tmp/lock")
-	if err = AssertThat(err, NilValue()); err != nil {
+	if err := AssertThat(err, NilValue()); err != nil {
 		t.Fatal(err)
 	}
 }
