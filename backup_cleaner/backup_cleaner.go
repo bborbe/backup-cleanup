@@ -8,10 +8,8 @@ import (
 	"regexp"
 	"sort"
 
-	"github.com/bborbe/log"
+	"github.com/golang/glog"
 )
-
-var logger = log.DefaultLogger
 
 type backupCleaner struct {
 }
@@ -25,35 +23,35 @@ func New() *backupCleaner {
 }
 
 func (b *backupCleaner) CleanupBackup(directory string, match string, keepAmount int) error {
-	logger.Debugf("backup cleanup started")
+	glog.V(2).Infof("backup cleanup started")
 
 	allBackups, err := listBackups(directory, match)
 	if err != nil {
 		return err
 	}
-	logger.Debugf("found %d backups", len(allBackups))
+	glog.V(2).Infof("found %d backups", len(allBackups))
 
 	sort.Sort(FileInfoByName(allBackups))
 
 	toDeleteBackups := getBackupsToDelete(allBackups, keepAmount)
-	logger.Debugf("found %d backups to delete", toDeleteBackups)
+	glog.V(2).Infof("found %d backups to delete", toDeleteBackups)
 
 	if err = deleteBackups(directory, toDeleteBackups); err != nil {
 		return err
 	}
 
-	logger.Debugf("backup cleanup finished")
+	glog.V(2).Infof("backup cleanup finished")
 	return nil
 }
 
 func getBackupsToDelete(allBackups []os.FileInfo, keepAmount int) []os.FileInfo {
 	emptyBackups := emptyFiles(allBackups)
-	logger.Debugf("found %d empty backups to delete", len(emptyBackups))
+	glog.V(2).Infof("found %d empty backups to delete", len(emptyBackups))
 	notEmptyBackups := notEmptyFiles(allBackups)
-	logger.Debugf("found %d not empty backups", len(notEmptyBackups))
+	glog.V(2).Infof("found %d not empty backups", len(notEmptyBackups))
 	pos := len(notEmptyBackups) - keepAmount
 	if pos < 0 {
-		logger.Debugf("nothing to delete => return only empty backups")
+		glog.V(2).Infof("nothing to delete => return only empty backups")
 		return emptyBackups
 	}
 	return append(notEmptyBackups[0:pos], emptyBackups...)
@@ -83,7 +81,7 @@ func filterFiles(files []os.FileInfo, filter func(file os.FileInfo) bool) []os.F
 
 func deleteBackups(directory string, files []os.FileInfo) error {
 	for _, file := range files {
-		logger.Debugf("delete backup %s", file.Name())
+		glog.V(2).Infof("delete backup %s", file.Name())
 		if err := os.Remove(fmt.Sprintf("%s/%s", directory, file.Name())); err != nil {
 			return err
 		}
@@ -102,17 +100,17 @@ func listBackups(directory string, match string) ([]os.FileInfo, error) {
 	}
 	list := make([]os.FileInfo, 0)
 	for _, f := range files {
-		logger.Tracef("found %s", f.Name())
+		glog.V(4).Infof("found %s", f.Name())
 		if f.IsDir() {
-			logger.Tracef("skip directory %s", f.Name())
+			glog.V(4).Infof("skip directory %s", f.Name())
 			continue
 		}
 		if re.MatchString(f.Name()) {
-			logger.Tracef("%s matches %s", f.Name(), match)
-			logger.Debugf("add backup %s", f.Name())
+			glog.V(4).Infof("%s matches %s", f.Name(), match)
+			glog.V(2).Infof("add backup %s", f.Name())
 			list = append(list, f)
 		} else {
-			logger.Tracef("%s mismatches %s", f.Name(), match)
+			glog.V(4).Infof("%s mismatches %s", f.Name(), match)
 		}
 	}
 	return list, nil
