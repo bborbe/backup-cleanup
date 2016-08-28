@@ -10,7 +10,8 @@ One time
 
 ```
 backup_cleanup_cron \
--loglevel=debug \
+-logtostderr \
+-v=2 \
 -lock=/backup/backup_cleanup_cron.lock \
 -dir=/backup \
 -match='backup_.*tar.gz' \
@@ -22,7 +23,8 @@ Cron
 
 ```
 backup_cleanup_cron \
--loglevel=debug \
+-logtostderr \
+-v=2 \
 -lock=/backup/backup_cleanup_cron.lock \
 -dir=/backup \
 -match='backup_.*tar.gz' \

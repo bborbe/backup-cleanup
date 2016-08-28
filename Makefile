@@ -12,7 +12,8 @@ errcheck:
 check: lint vet errcheck
 run:
 	backup_cleanup_cron \
-	-loglevel=DEBUG \
+	-logtostderr \
+	-v=2 \
 	-dir=/tmp \
 	-lock=/tmp/backup_cleanup_cron.lock \
 	-match=backup-to-devel
