@@ -68,7 +68,12 @@ func do(
 	if err := l.Lock(); err != nil {
 		return err
 	}
-	defer l.Unlock()
+	defer func() {
+		if err := l.Unlock(); err != nil {
+			glog.Warningf("unlock failed: %v", err)
+		}
+	}()
+
 	glog.V(2).Info("backup cleanup cron started")
 	defer glog.V(2).Info("backup cleanup cron finished")
 
