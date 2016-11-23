@@ -4,5 +4,6 @@ import:
 - package: github.com/bborbe/lock
 - package: github.com/bborbe/stringutil
 - package: github.com/golang/glog
+- package: github.com/bborbe/cron
 testImport:
 - package: github.com/bborbe/assert
