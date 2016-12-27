@@ -34,7 +34,7 @@ backup_cleanup_cron \
 
 ## Continuous integration
 
-[Jenkins](https://www.benjamin-borbe.de/jenkins/job/Go-Backup-Cleanup-Cron/)
+[Jenkins](https://jenkins.benjamin-borbe.de/job/Go-Backup-Cleanup-Cron/)
 
 ## Copyright and license
 
