@@ -1,4 +1,4 @@
-# Postgres Backup Cron
+# Cron for cleanup Backups
 
 ## Install
 
