@@ -65,8 +65,8 @@ func do() error {
 		}
 	}()
 
-	glog.V(2).Info("backup cleanup cron started")
-	defer glog.V(2).Info("backup cleanup cron finished")
+	glog.V(0).Info("backup cleanup cron started")
+	defer glog.V(0).Info("backup cleanup cron finished")
 
 	if len(dir) == 0 {
 		return fmt.Errorf("parameter %s missing", parameterDirectory)
@@ -79,7 +79,7 @@ func do() error {
 	}
 
 	backupCleaner := backup_cleaner.New()
-	glog.V(2).Infof("dir: %s, match: %s, keepAmount %d, wait: %v, oneTime: %v, lockName: %s", dir, match, keepAmount, wait, oneTime, lockName)
+	glog.V(1).Infof("dir: %s, match: %s, keepAmount %d, wait: %v, oneTime: %v, lockName: %s", dir, match, keepAmount, wait, oneTime, lockName)
 
 	action := func(ctx context.Context) error {
 		return backupCleaner.CleanupBackup(dir, match, keepAmount)
