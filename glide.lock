@@ -1,16 +1,16 @@
-hash: 6849d2ca86eb47bed5b76de3a58fa0f11e23cae7d25f4542b8077122a01a0b65
-updated: 2016-11-23T16:17:53.812869463+01:00
+hash: 7480654ab5af176eccb58703c091fecdf77dba14cb2499e10b82ff243fd1d0bf
+updated: 2017-06-13T12:53:41.785436393+02:00
 imports:
 - name: github.com/bborbe/cron
-  version: 7cda28ee402a1a7a1214a7c6e44baabce8622133
+  version: 807a2c6a298ae10a1c35f7f26815284599c6a622
 - name: github.com/bborbe/flagenv
-  version: 96aab95bb1341e7a7ccf9160e49792e2ad3b0e08
+  version: 4bf10dbe62f41ce40353a70225a84decfd16d3ac
 - name: github.com/bborbe/lock
-  version: 60ec8797970f7e68875b5ae0889e36ebda5403de
+  version: ac57be166a1c39f4555dc7f865b35b84d7807549
 - name: github.com/bborbe/stringutil
-  version: 1ee171d7c930864e5d851c9e8909394978a5a1d1
+  version: 5bad1563d440e94f52a86cc502606af8233b587b
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 testImports:
 - name: github.com/bborbe/assert
-  version: d2b3a7c4c731ac8cc63c6f5a1ea7d401e7547d42
+  version: 2448f69a8cb98ee9e5744f678477959100ceb9d4

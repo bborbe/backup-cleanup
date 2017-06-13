@@ -6,32 +6,32 @@ import (
 
 	"runtime"
 
+	"context"
 	"github.com/bborbe/backup_cleanup_cron/backup_cleaner"
+	"github.com/bborbe/cron"
 	flag "github.com/bborbe/flagenv"
 	"github.com/bborbe/lock"
 	"github.com/golang/glog"
-	"context"
-	"github.com/bborbe/cron"
 )
 
 const (
-	defaultKeepAmount = 5
-	lockName = "/var/run/backup_cleanup_cron.lock"
+	defaultKeepAmount   = 5
+	lockName            = "/var/run/backup_cleanup_cron.lock"
 	parameterKeepAmount = "keep"
-	parameterDirectory = "dir"
-	parameterMatch = "match"
-	parameterWait = "wait"
-	parameterOneTime = "one-time"
-	parameterLock = "lock"
+	parameterDirectory  = "dir"
+	parameterMatch      = "match"
+	parameterWait       = "wait"
+	parameterOneTime    = "one-time"
+	parameterLock       = "lock"
 )
 
 var (
-	targetDirPtr = flag.String(parameterDirectory, "", "target directory")
-	matchPtr = flag.String(parameterMatch, "", "match")
+	targetDirPtr  = flag.String(parameterDirectory, "", "target directory")
+	matchPtr      = flag.String(parameterMatch, "", "match")
 	keepAmountPtr = flag.Int(parameterKeepAmount, defaultKeepAmount, "keep amount")
-	waitPtr = flag.Duration(parameterWait, time.Minute * 60, "wait")
-	oneTimePtr = flag.Bool(parameterOneTime, false, "exit after first backup")
-	lockPtr = flag.String(parameterLock, lockName, "lock")
+	waitPtr       = flag.Duration(parameterWait, time.Minute*60, "wait")
+	oneTimePtr    = flag.Bool(parameterOneTime, false, "exit after first backup")
+	lockPtr       = flag.String(parameterLock, lockName, "lock")
 )
 
 type CleanupBackup func(directory string, match string, keepAmount int) error
@@ -85,10 +85,14 @@ func do() error {
 		return backupCleaner.CleanupBackup(dir, match, keepAmount)
 	}
 
-	cron := cron.New(
-		*oneTimePtr,
-		*waitPtr,
-		action,
-	)
-	return cron.Run(context.Background())
+	var c cron.Cron
+	if *oneTimePtr {
+		c = cron.NewOneTimeCron(action)
+	} else {
+		c = cron.NewWaitCron(
+			*waitPtr,
+			action,
+		)
+	}
+	return c.Run(context.Background())
 }
