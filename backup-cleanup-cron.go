@@ -7,7 +7,7 @@ import (
 	"runtime"
 
 	"context"
-	"github.com/bborbe/backup_cleanup_cron/backup_cleaner"
+	"github.com/bborbe/backup-cleanup-cron/backup_cleaner"
 	"github.com/bborbe/cron"
 	flag "github.com/bborbe/flagenv"
 	"github.com/bborbe/lock"
