@@ -1,5 +1,5 @@
 REGISTRY ?= docker.io
-IMAGE ?= bborbe/backup-cleanup-cron
+IMAGE ?= bborbe/backup-cleanup
 ifeq ($(VERSION),)
 	VERSION := $(shell git fetch --tags; git describe --tags `git rev-list --tags --max-count=1`)
 endif
@@ -49,15 +49,15 @@ clean:
 	docker rmi $(REGISTRY)/$(IMAGE):$(VERSION)
 
 buildgo:
-	CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o backup-cleanup-cron ./go/src/github.com/$(IMAGE)
+	CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o backup-cleanup ./go/src/github.com/$(IMAGE)
 
 build:
 	docker build --build-arg VERSION=$(VERSION) --no-cache --rm=true -t $(REGISTRY)/$(IMAGE)-build:$(VERSION) -f ./Dockerfile.build .
 	docker run -t $(REGISTRY)/$(IMAGE)-build:$(VERSION) /bin/true
-	docker cp `docker ps -q -n=1 -f ancestor=$(REGISTRY)/$(IMAGE)-build:$(VERSION) -f status=exited`:/backup-cleanup-cron .
+	docker cp `docker ps -q -n=1 -f ancestor=$(REGISTRY)/$(IMAGE)-build:$(VERSION) -f status=exited`:/backup-cleanup .
 	docker rm `docker ps -q -n=1 -f ancestor=$(REGISTRY)/$(IMAGE)-build:$(VERSION) -f status=exited`
 	docker build --no-cache --rm=true --tag=$(REGISTRY)/$(IMAGE):$(VERSION) -f Dockerfile.static .
-	rm backup-cleanup-cron
+	rm backup-cleanup
 
 upload:
 	docker push $(REGISTRY)/$(IMAGE):$(VERSION)

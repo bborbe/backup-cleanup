@@ -3,7 +3,7 @@
 ## Install
 
 ```
-go get github.com/bborbe/backup-cleanup-cron
+go get github.com/bborbe/backup-cleanup
 ```
 
 ## Run Backup
@@ -11,10 +11,10 @@ go get github.com/bborbe/backup-cleanup-cron
 One time
 
 ```
-backup-cleanup-cron \
+backup-cleanup \
 -logtostderr \
 -v=2 \
--lock=/backup/backup-cleanup-cron.lock \
+-lock=/backup/backup-cleanup.lock \
 -dir=/backup \
 -match='backup_.*tar.gz' \
 -keep=5 \
@@ -24,10 +24,10 @@ backup-cleanup-cron \
 Cron
 
 ```
-backup-cleanup-cron \
+backup-cleanup \
 -logtostderr \
 -v=2 \
--lock=/backup/backup-cleanup-cron.lock \
+-lock=/backup/backup-cleanup.lock \
 -dir=/backup \
 -match='backup_.*tar.gz' \
 -keep=5 \

@@ -7,7 +7,7 @@ import (
 	"runtime"
 
 	"context"
-	"github.com/bborbe/backup-cleanup-cron/backup_cleaner"
+	"github.com/bborbe/backup-cleanup/backup_cleaner"
 	"github.com/bborbe/cron"
 	flag "github.com/bborbe/flagenv"
 	"github.com/bborbe/lock"
@@ -16,7 +16,7 @@ import (
 
 const (
 	defaultKeepAmount   = 5
-	lockName            = "/var/run/backup-cleanup-cron.lock"
+	lockName            = "/var/run/backup-cleanup.lock"
 	parameterKeepAmount = "keep"
 	parameterDirectory  = "dir"
 	parameterMatch      = "match"
