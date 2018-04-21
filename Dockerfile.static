@@ -1,7 +1,7 @@
 FROM tianon/true
 MAINTAINER Benjamin Borbe <bborbe@rocketnews.de>
 
-ENV LOCK /backup_cleanup_cron.run
+ENV LOCK /backup-cleanup-cron.run
 ENV WAIT 1h
 ENV ONE_TIME false
 ENV KEEP 5
@@ -10,6 +10,6 @@ ENV MATCH backup_.*sql
 
 VOLUME ["/backup"]
 
-COPY backup_cleanup_cron /
+COPY backup-cleanup-cron /
 COPY files/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-ENTRYPOINT ["/backup_cleanup_cron"]
+ENTRYPOINT ["/backup-cleanup-cron"]

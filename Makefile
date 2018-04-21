@@ -49,7 +49,7 @@ clean:
 	docker rmi $(REGISTRY)/$(IMAGE):$(VERSION)
 
 buildgo:
-	CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o backup-cleanup-cron ./go/src/github.com/$(IMAGE)/bin/backup-cleanup-cron
+	CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o backup-cleanup-cron ./go/src/github.com/$(IMAGE)
 
 build:
 	docker build --build-arg VERSION=$(VERSION) --no-cache --rm=true -t $(REGISTRY)/$(IMAGE)-build:$(VERSION) -f ./Dockerfile.build .

@@ -16,7 +16,7 @@ import (
 
 const (
 	defaultKeepAmount   = 5
-	lockName            = "/var/run/backup_cleanup_cron.lock"
+	lockName            = "/var/run/backup-cleanup-cron.lock"
 	parameterKeepAmount = "keep"
 	parameterDirectory  = "dir"
 	parameterMatch      = "match"
