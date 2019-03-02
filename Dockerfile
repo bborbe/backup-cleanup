@@ -1,4 +1,4 @@
-FROM golang:1.11.1 AS build
+FROM golang:1.12.0 AS build
 COPY . /go/src/github.com/bborbe/backup-cleanup
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o /backup-cleanup ./src/github.com/bborbe/backup-cleanup
 CMD ["/bin/bash"]
